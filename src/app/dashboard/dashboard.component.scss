@@ -1,0 +1,15 @@
+.dashboard-header { text-align: right; margin-bottom: 16px; }
+
+.table-container { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  td.selected, tr:hover td { background-color: #b2ebf2; cursor: pointer; }
+
+  th, td { padding: 8px; border-bottom: 1px solid #ccc; }
+  th { text-align: left; cursor: pointer; }
+}
+
+.filter-section { margin-bottom: 16px; width: 300px; }

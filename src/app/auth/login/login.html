@@ -1,0 +1,14 @@
+<div class="login-container">
+  <mat-card>
+    <h2>Login</h2>
+    <mat-form-field appearance="fill">
+      <mat-label>Usuário</mat-label>
+      <input matInput [(ngModel)]="username">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Senha</mat-label>
+      <input matInput [(ngModel)]="password" type="password">
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="login()">Entrar</button>
+  </mat-card>
+</div>
