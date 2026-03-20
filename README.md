@@ -1,60 +1,83 @@
-# GBastosHexagonSkillTestFrontend
+Descrição
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.2.
+O GBastos.Hexagon-Skill_Test_Frontend é uma aplicação Angular 20 standalone components, específicamente construída para 
+consumir a API GBastos.Hexagon-Skill_Test_Backend.
 
-## Development server
 
-To start a local development server, run:
+A aplicação possui:
 
-```bash
-ng serve
-```
+ - Tela de Login com autenticação via JWT
+ - Dashboard avançado com grid de dados
+ - Busca e filtragem em tempo real
+ - Paginação
+ - Sorting por coluna
+ - Inline edit (edição direta na tabela)
+ - Linha selecionada persistente
+ - Botões de Atualizar e Excluir integrados ao backend
+ - O frontend foi desenvolvido para ser modular, escalável e pronto para produção.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
+Tecnologias Utilizadas:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+ - Angular 20 – framework principal do frontend
+ - Standalone Components – sem AppModule, componentes independentes
+ - Angular Forms / NgModel – para binding de campos e filtros
+ - Angular Material – para UI/UX (tabela, inputs, botões, snackbars, paginator)
+ - RxJS – para chamadas assíncronas e observables
+ - TypeScript – linguagem principal
+ - JWT – autenticação e autorização
 
-```bash
-ng generate component component-name
-```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Funcionalidades
 
-```bash
-ng generate --help
-```
+Login
 
-## Building
+ - Autenticação via API backend (/api/auth/login)
+ - Recebe JWT e armazena no localStorage
+ - Redireciona para o Dashboard após login
+ - Dashboard
+ - Grid avançado exibindo dados do backend
+   -> Busca / filtro em tempo real
+   -> Paginação com Angular Material Paginator
+   -> Sorting por coluna (clique no cabeçalho)
+   -> Inline edit: permite atualizar dados diretamente na tabela
+   -> Linha selecionada destacada
+   -> Botões Atualizar / Excluir integrados ao backend
+   -> Logout funcional
 
-To build the project run:
 
-```bash
-ng build
-```
+Notificações
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Feedback de sucesso/erro usando MatSnackBar
 
-## Running unit tests
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Pré-requisitos
 
-```bash
-ng test
-```
+ - Node.js ≥ 18.x
+ - Angular CLI ≥ 16.x
+ - Backend GBastos.Hexagon-Skill_Test_Backend rodando
 
-## Running end-to-end tests
 
-For end-to-end (e2e) testing, run:
+Instalação
 
-```bash
-ng e2e
-```
+ - Clonar o repositório:
+ - git clone https://github.com/RiderSet/GBastos.Hexagon-Skill_Test_Frontend.git
+ - cd GBastos.Hexagon-Skill_Test_Frontend
+ - Instalar dependências:
+ - npm install
+ - Rodar a aplicação: ng serve
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
-## Additional Resources
+Acesse no navegador: http://localhost:4200
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-# GBastos.Hexagon-Skill_Test_Frontend
+Certifique-se de que a API backend esteja rodando e acessível em https://localhost:5017 ou ajuste a URL no ApiService.
+
+
+Configuração do Backend
+
+No arquivo core/api.service.ts, configure a URL base da API:
+
+private baseUrl = 'https://localhost:5001/api';
+
+
+Essa URL deve apontar para o backend GBastos.Hexagon-Skill_Test_Backend.
