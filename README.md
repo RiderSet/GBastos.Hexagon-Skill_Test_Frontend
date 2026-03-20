@@ -1,3 +1,6 @@
+Projeto: GBastos.Hexagon-Skill_Test_Frontend
+
+
 Descrição
 
 O GBastos.Hexagon-Skill_Test_Frontend é uma aplicação Angular 20 standalone components, específicamente construída para 
