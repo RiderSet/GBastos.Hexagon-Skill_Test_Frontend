@@ -1,0 +1,4 @@
+{
+  "eslint.validate": ["typescript", "html"],
+  "html.validate.attributes": false
+}
