@@ -22,7 +22,7 @@ A aplicação possui:
 
 Tecnologias Utilizadas:
 
- - Angular 20 – framework principal do frontend
+ - Angular 21 – framework principal do frontend
  - Standalone Components – sem AppModule, componentes independentes
  - Angular Forms / NgModel – para binding de campos e filtros
  - Angular Material – para UI/UX (tabela, inputs, botões, snackbars, paginator)
