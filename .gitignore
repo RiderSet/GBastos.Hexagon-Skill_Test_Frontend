@@ -37,6 +37,10 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+
+/nodes_modules
+/dist
+
 __screenshots__/
 
 # System files
