@@ -1,15 +1,25 @@
-.dashboard-header { text-align: right; margin-bottom: 16px; }
-
-.table-container { overflow-x: auto; }
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-
-  td.selected, tr:hover td { background-color: #b2ebf2; cursor: pointer; }
-
-  th, td { padding: 8px; border-bottom: 1px solid #ccc; }
-  th { text-align: left; cursor: pointer; }
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
 }
 
-.filter-section { margin-bottom: 16px; width: 300px; }
+table {
+    width: 100%;
+}
+
+.selected {
+    background-color: #e3f2fd !important;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.empty {
+    text-align: center;
+    padding: 20px;
+    color: gray;
+}

@@ -1,0 +1,89 @@
+/* Reset básico */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* Fonte padrão */
+
+body {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+
+/* Layout principal */
+
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Toolbar (se usar Angular Material) */
+
+mat-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    font-weight: 500;
+}
+
+
+/* Conteúdo principal */
+
+.main-content {
+    flex: 1;
+    padding: 1.5rem;
+}
+
+
+/* Cards padrão */
+
+mat-card {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+
+/* Botões */
+
+button {
+    text-transform: none !important;
+}
+
+
+/* Inputs */
+
+mat-form-field {
+    width: 100%;
+}
+
+
+/* Snackbar customizado */
+
+.mat-mdc-snack-bar-container {
+    border-radius: 8px !important;
+    font-size: 0.95rem;
+}
+
+
+/* Scrollbar (opcional - Chrome) */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

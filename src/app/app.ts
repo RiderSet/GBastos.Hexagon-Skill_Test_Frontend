@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { routes } from './app.routes';
-import { AuthInterceptor } from './auth/auth.interceptor';
+import { RouterModule } from '@angular/router'; // 👈 IMPORTANTE
 
 @Component({
   selector: 'app-root',
   standalone: true,
+  imports: [RouterModule], // 👈 AQUI
   template: `<router-outlet></router-outlet>`
 })
-export class AppComponent {}
+export class App {}

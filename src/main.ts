@@ -1,11 +1,12 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { AppComponent } from './app/app.component';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { AuthInterceptor } from './app/auth/auth.interceptor';
+
+import { App } from './app/app'; 
+import { AuthInterceptor } from './app/auth/interceptors/auth.interceptor';
 import { routes } from './app/app.routes';
 
-bootstrapApplication(AppComponent, {
+bootstrapApplication(App, {
   providers: [
     provideRouter(routes),
     provideHttpClient(withInterceptors([AuthInterceptor]))
