@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -9,19 +10,42 @@ interface LoginResponse { token: string; }
 export class AuthService {
   private apiUrl = 'https://localhost:5017/api/auth/login';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   login(username: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(this.apiUrl, { username, password }).pipe(
       map(res => {
-        localStorage.setItem('token', res.token);
+        this.setToken(res.token);
         return res;
       }),
       catchError(err => throwError(() => new Error(err.status === 401 ? 'Usuário ou senha inválidos' : err.message)))
     );
   }
 
-  logout() { localStorage.removeItem('token'); }
-  getToken() { return localStorage.getItem('token'); }
-  isLoggedIn() { return !!this.getToken(); }
+  logout() {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('token');
+    }
+  }
+
+  getToken(): string | null {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('token');
+    }
+    return null;
+  }
+
+  setToken(token: string) {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('token', token);
+    }
+  }
+
+  // ← Adicione este método para corrigir o erro
+  isLoggedIn(): boolean {
+    return !!this.getToken();
+  }
 }

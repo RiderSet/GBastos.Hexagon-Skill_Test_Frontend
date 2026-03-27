@@ -57,7 +57,7 @@ import { AuthService } from '../../core/services/auth.service';
     }
   `]
 })
-export class ToolbarComponent {
+export class Toolbar {
 
   username = '';
 
@@ -78,7 +78,11 @@ export class ToolbarComponent {
 
     if (!token) return '';
 
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload?.unique_name || payload?.name || 'Usuário';
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload?.unique_name || payload?.name || 'Usuário';
+    } catch {
+      return 'Usuário';
+    }
   }
 }

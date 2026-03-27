@@ -39,7 +39,7 @@ import { CommonModule } from '@angular/common';
     }
   `]
 })
-export class InlineEditorComponent {
+export class InlineEditor {
   @Input() value: string = '';
   @Input() placeholder: string = 'Clique para editar';
   @Output() valueChange = new EventEmitter<string>();

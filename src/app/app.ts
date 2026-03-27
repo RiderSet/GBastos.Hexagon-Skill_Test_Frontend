@@ -1,10 +1,56 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs';
+import { Toolbar } from './shared/components/toolbar';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule],
-  template: `<router-outlet></router-outlet>` 
+  imports: [CommonModule, RouterOutlet, Toolbar],
+  template: `
+    <div class="layout">
+
+      <app-toolbar *ngIf="showToolbar"></app-toolbar>
+
+      <main class="content" [class.full]="!showToolbar">
+        <router-outlet></router-outlet>
+      </main>
+
+    </div>
+  `,
+  styles: [`
+    .layout {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #f5f7fa;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+      overflow: auto;
+    }
+
+    .content.full {
+      padding: 0;
+    }
+  `]
 })
-export class App {}
+
+export class AppComponent {
+
+  showToolbar = true;
+
+  constructor(private router: Router) {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+
+        // esconder toolbar no login
+        this.showToolbar = !event.url.includes('login');
+
+      });
+  }
+}

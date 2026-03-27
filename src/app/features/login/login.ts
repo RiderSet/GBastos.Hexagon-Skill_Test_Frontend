@@ -1,7 +1,7 @@
 // src/app/features/login/login.component.ts
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
@@ -82,21 +82,23 @@ import { AuthService } from '../../core/services/auth.service';
     }
   `]
 })
-export class LoginComponent {
+export class Login {
 
   loading = signal(false);
 
-  form = this.fb.group({
-    username: ['', Validators.required],
-    password: ['', Validators.required]
-  });
+  form!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
     private snack: MatSnackBar
-  ) {}
+  ) {
+    this.form = this.fb.nonNullable.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+  }
 
   login() {
 
@@ -104,12 +106,13 @@ export class LoginComponent {
 
     this.loading.set(true);
 
-    const { username, password } = this.form.value;
+    const { username, password } = this.form.getRawValue();
 
-    this.auth.login(username!, password!)
+    this.auth.login(username, password)
       .subscribe({
         next: () => {
           this.snack.open('Login realizado com sucesso', 'OK', { duration: 2000 });
+          this.loading.set(false);
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {

@@ -38,7 +38,7 @@ import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
     }
   `]
 })
-export class FilterSearchComponent implements OnDestroy {
+export class FilterSearch implements OnDestroy {
 
   @Output() searchChange = new EventEmitter<string>();
 

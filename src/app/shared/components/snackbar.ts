@@ -66,11 +66,11 @@ import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar'
     }
   `]
 })
-export class SnackbarComponent {
+export class Snackbar {
 
   constructor(
     @Inject(MAT_SNACK_BAR_DATA) public data: any,
-    private snackRef: MatSnackBarRef<SnackbarComponent>
+    private snackRef: MatSnackBarRef<Snackbar>
   ) {}
 
   action() {

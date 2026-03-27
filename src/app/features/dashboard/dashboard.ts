@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
-import { TableGridComponent } from './components/tables/table-grid.component';
-import { EditUsuarioComponent } from './components/editors/edit-usuario.component';
+import { TableGrid } from './components/tables/table-grid';
+import { EditUsuario } from './components/editors/edit-usuario';
 
 import { DashboardService } from './services/dashboard.service';
 import { User } from '../../shared/models/user.model';
@@ -15,7 +15,7 @@ import { User } from '../../shared/models/user.model';
   standalone: true,
   imports: [
     CommonModule,
-    TableGridComponent,
+    TableGrid,
     MatSnackBarModule,
     MatDialogModule
   ],
@@ -135,7 +135,7 @@ import { User } from '../../shared/models/user.model';
   }
   `]
 })
-export class DashboardComponent implements OnInit {
+export class Dashboard implements OnInit {
 
   data: User[] = [];
   selected: User[] = [];
@@ -186,7 +186,7 @@ export class DashboardComponent implements OnInit {
 
   openEdit(usuario: User) {
 
-    const dialogRef = this.dialog.open(EditUsuarioComponent, {
+    const dialogRef = this.dialog.open(EditUsuario, {
       width: '500px',
       data: usuario
     });

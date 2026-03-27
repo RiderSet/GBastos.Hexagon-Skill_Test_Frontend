@@ -19,22 +19,18 @@ import { CommonModule } from '@angular/common';
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-      <button mat-button (click)="cancelar()">Cancelar</button>
-      <button mat-raised-button color="warn" (click)="confirmar()">Confirmar</button>
+      <button mat-button mat-dialog-close="false">
+        Cancelar
+      </button>
+
+      <button mat-raised-button color="warn" mat-dialog-close="true">
+        Confirmar
+      </button>
     </mat-dialog-actions>
   `
 })
-export class ConfirmDialogComponent {
+export class ConfirmDialog {
   constructor(
-    private dialogRef: MatDialogRef<ConfirmDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { message: string }
   ) {}
-
-  cancelar() {
-    this.dialogRef.close(false);
-  }
-
-  confirmar() {
-    this.dialogRef.close(true);
-  }
 }

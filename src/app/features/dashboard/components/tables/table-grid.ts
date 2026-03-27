@@ -69,7 +69,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 </table>
 `
 })
-export class TableGridComponent {
+export class TableGrid {
 
   @Input() data: any[] = [];
   @Input() columns: any[] = [];

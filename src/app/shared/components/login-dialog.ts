@@ -22,6 +22,7 @@ import { CommonModule } from '@angular/common';
 
     <form [formGroup]="loginForm" (ngSubmit)="submit()">
       <mat-dialog-content>
+
         <mat-form-field appearance="fill" class="full-width">
           <mat-label>Email</mat-label>
           <input matInput formControlName="email" type="email" required>
@@ -31,11 +32,17 @@ import { CommonModule } from '@angular/common';
           <mat-label>Senha</mat-label>
           <input matInput formControlName="password" type="password" required>
         </mat-form-field>
+
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
-        <button mat-button (click)="cancelar()">Cancelar</button>
-        <button mat-raised-button color="primary" type="submit">Entrar</button>
+        <button mat-button mat-dialog-close>
+          Cancelar
+        </button>
+
+        <button mat-raised-button color="primary" type="submit">
+          Entrar
+        </button>
       </mat-dialog-actions>
     </form>
   `,
@@ -43,21 +50,18 @@ import { CommonModule } from '@angular/common';
     .full-width { width: 100%; }
   `]
 })
-export class LoginDialogComponent {
+export class LoginDialog {
+
   loginForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<LoginDialogComponent>
+    private dialogRef: MatDialogRef<LoginDialog>
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
-  }
-
-  cancelar() {
-    this.dialogRef.close(false);
   }
 
   submit() {
