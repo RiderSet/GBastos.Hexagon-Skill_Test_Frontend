@@ -83,4 +83,4 @@ No arquivo core/api.service.ts, configure a URL base da API:
 private baseUrl = 'https://localhost:5017/api';
 
 
-Essa URL deve apontar para o backend GBastos.Hexagon-Skill_Test_Backend.
+Essa URL deve apontar para o backend GBastos.Hexagon-Skill_Test_Backend. Portanto, o backend desta aplicação deve estar rodando.
