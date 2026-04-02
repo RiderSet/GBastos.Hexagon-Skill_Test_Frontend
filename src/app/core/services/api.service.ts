@@ -4,7 +4,11 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
+<<<<<<< HEAD
   private baseUrl = 'http://localhost:5100/items';
+=======
+  private baseUrl = 'http://localhost:5100/api/items';
+>>>>>>> d69daaf86ccde21b828aa24b756982f8cf5f4e91
 
   constructor(private http: HttpClient) {}
 

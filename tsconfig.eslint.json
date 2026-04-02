@@ -1,9 +1,30 @@
 {
   "extends": "./tsconfig.json",
+<<<<<<< HEAD
   "include": [
     "src/**/*.ts",
     "src/environments/*.ts",
     "src/app/app-routing.module.ts",
     "src/app/login/**/*.ts"
+=======
+  "compilerOptions": {
+    "noEmit": true,
+    "allowJs": true,
+    "checkJs": false
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/app/**/*.ts",
+    "src/app/login/**/*.ts",
+    "src/app/core/services/**/*.ts",
+    "src/app/shared/components/**/*.ts",
+    "src/app/features/login/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.spec.ts"
+>>>>>>> d69daaf86ccde21b828aa24b756982f8cf5f4e91
   ]
 }

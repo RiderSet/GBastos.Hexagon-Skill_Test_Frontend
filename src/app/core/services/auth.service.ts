@@ -11,7 +11,11 @@ interface LoginResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+<<<<<<< HEAD
   private readonly apiUrl = environment.apiUrl + '/login'; // ← readonly
+=======
+  private apiUrl = 'http://localhost:5100/api/auth/login';
+>>>>>>> d69daaf86ccde21b828aa24b756982f8cf5f4e91
 
   constructor(
     private readonly http: HttpClient,           // ← readonly

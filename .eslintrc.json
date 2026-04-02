@@ -5,7 +5,8 @@
     {
       "files": ["*.ts"],
       "parserOptions": {
-        "project": ["./tsconfig.eslint.json"]
+        "project": "tsconfig.eslint.json",
+        "tsconfigRootDir": "./"
       },
       "extends": [
         "eslint:recommended",
