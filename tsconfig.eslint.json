@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/**/*.ts",
+    "src/environments/*.ts",
+    "src/app/app-routing.module.ts",
+    "src/app/login/**/*.ts"
+  ]
+}

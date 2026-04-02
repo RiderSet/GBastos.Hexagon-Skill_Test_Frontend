@@ -22,7 +22,7 @@ A aplicação possui:
 
 Tecnologias Utilizadas:
 
- - Angular 20 – framework principal do frontend
+ - Angular 21 – framework principal do frontend
  - Standalone Components – sem AppModule, componentes independentes
  - Angular Forms / NgModel – para binding de campos e filtros
  - Angular Material – para UI/UX (tabela, inputs, botões, snackbars, paginator)
@@ -73,14 +73,14 @@ Instalação
 
 Acesse no navegador: http://localhost:4200
 
-Certifique-se de que a API backend esteja rodando e acessível em https://localhost:5017 ou ajuste a URL no ApiService.
+Certifique-se de que a API backend esteja rodando e acessível em http://localhost:5100 ou ajuste a URL no ApiService.
 
 
 Configuração do Backend
 
 No arquivo core/api.service.ts, configure a URL base da API:
 
-private baseUrl = 'https://localhost:5001/api';
+private baseUrl = 'http://localhost:5100/api';
 
 
-Essa URL deve apontar para o backend GBastos.Hexagon-Skill_Test_Backend.
+Essa URL deve apontar para o backend GBastos.Hexagon-Skill_Test_Backend. Portanto, o backend desta aplicação deve estar rodando.

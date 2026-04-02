@@ -37,6 +37,13 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+
+/nodes_modules
+/dist
+
+/*.log
+/.angular
+
 __screenshots__/
 
 # System files

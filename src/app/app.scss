@@ -1,79 +1,187 @@
-/* Reset básico */
+/* ===============================
+   RESET GLOBAL
+================================ */
 
-* {
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 
-/* Fonte padrão */
+/* ===============================
+   VARIÁVEIS
+================================ */
 
+:root {
+    --primary-color: #1976d2;
+    --primary-dark: #0d47a1;
+    --accent-color: #26a69a;
+    --warn-color: #f44336;
+    --bg-color: #f5f7fa;
+    --card-bg: #ffffff;
+    --text-color: #333;
+    --border-color: #e0e0e0;
+    --radius: 8px;
+    --transition: 0.2s ease-in-out;
+}
+
+
+/* ===============================
+   BODY
+================================ */
+
+html,
 body {
+    height: 100%;
     font-family: Roboto, "Helvetica Neue", sans-serif;
-    background-color: #f5f7fa;
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 
-/* Layout principal */
+/* ===============================
+   LAYOUT APP
+================================ */
 
 .app-container {
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
 
-
-/* Toolbar (se usar Angular Material) */
-
-mat-toolbar {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    font-weight: 500;
-}
-
-
-/* Conteúdo principal */
-
+.content-container,
 .main-content {
     flex: 1;
     padding: 1.5rem;
 }
 
 
-/* Cards padrão */
+/* ===============================
+   TOOLBAR
+================================ */
 
+.mat-toolbar,
+mat-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    font-weight: 500;
+    background: var(--primary-color);
+    color: white;
+}
+
+
+/* ===============================
+   CARDS
+================================ */
+
+.card,
 mat-card {
-    border-radius: 12px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
 
-/* Botões */
-
-button {
-    text-transform: none !important;
-}
-
-
-/* Inputs */
+/* ===============================
+   FORMULÁRIOS / INPUTS
+================================ */
 
 mat-form-field {
     width: 100%;
 }
 
+.form-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
 
-/* Snackbar customizado */
+.full-width {
+    width: 100%;
+}
+
+.half-width {
+    width: calc(50% - 8px);
+}
+
+
+/* ===============================
+   BOTÕES
+================================ */
+
+button,
+button.mat-raised-button {
+    text-transform: none;
+    border-radius: var(--radius);
+    transition: var(--transition);
+}
+
+button.mat-raised-button:hover {
+    transform: translateY(-1px);
+}
+
+
+/* ===============================
+   TABELAS
+================================ */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card-bg);
+}
+
+th {
+    background: #fafafa;
+    font-weight: 600;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+tr:hover {
+    background: #f9fbff;
+}
+
+
+/* ===============================
+   SNACKBAR
+================================ */
 
 .mat-mdc-snack-bar-container {
-    border-radius: 8px !important;
+    border-radius: 8px;
     font-size: 0.95rem;
 }
 
 
-/* Scrollbar (opcional - Chrome) */
+/* ===============================
+   LOGIN
+================================ */
+
+.login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    width: 400px;
+}
+
+
+/* ===============================
+   SCROLLBAR (Chrome)
+================================ */
 
 ::-webkit-scrollbar {
     width: 8px;
@@ -86,4 +194,22 @@ mat-form-field {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
+}
+
+
+/* ===============================
+   RESPONSIVO
+================================ */
+
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+    }
+    .half-width {
+        width: 100%;
+    }
+    .content-container,
+    .main-content {
+        padding: 12px;
+    }
 }
