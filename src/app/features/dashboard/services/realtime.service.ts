@@ -13,7 +13,7 @@ export interface DashboardItem {
 })
 export class DashboardService {
 
-  private apiUrl = 'https://localhost:5017/api/items';
+  private apiUrl = 'http://localhost:5100/api/items';
 
   constructor(private http: HttpClient) {}
 

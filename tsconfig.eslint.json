@@ -7,7 +7,12 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "src/app/**/*.ts",
+    "src/app/login/**/*.ts",
+    "src/app/core/services/**/*.ts",
+    "src/app/shared/components/**/*.ts",
+    "src/app/features/login/**/*.ts"
   ],
   "exclude": [
     "node_modules",

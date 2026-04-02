@@ -10,7 +10,7 @@ import { User } from '../../../shared/models/user.model';
 })
 export class DashboardService {
 
-  private api = 'https://localhost:5017/api/usuarios';
+  private api = 'http://localhost:5100/api/usuarios';
 
   constructor(private http: HttpClient) {}
 
