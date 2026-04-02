@@ -1,17 +1,26 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# Documentação oficial: https://docs.github.com/get-started/getting-started-with-git/ignoring-files
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# -------------------------
+# Compilação / Build output
+# -------------------------
+dist/
+tmp/
+out-tsc/
+bazel-out/
+bin/
+obj/
 
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
+# -------------------------
+# Node.js
+# -------------------------
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# IDEs and editors
+# -------------------------
+# IDEs e editores
+# -------------------------
 .idea/
 .project
 .classpath
@@ -27,25 +36,35 @@ yarn-error.log
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/mcp.json
-.history/*
+.history/
 
-# Miscellaneous
-/.angular/cache
+# -------------------------
+# Angular / Frontend
+# -------------------------
+.angular/
+.angular/cache/
 .sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
+connect.lock
+coverage/
+libpeerconnection.log
 testem.log
-/typings
-
-/nodes_modules
-/dist
-
-/*.log
-/.angular
-
+typings/
 __screenshots__/
 
-# System files
+# -------------------------
+# Logs
+# -------------------------
+*.log
+
+# -------------------------
+# Arquivos de sistema
+# -------------------------
 .DS_Store
 Thumbs.db
+
+# -------------------------
+# SQLite
+# -------------------------
+*.db
+*.db-shm
+*.db-wal
