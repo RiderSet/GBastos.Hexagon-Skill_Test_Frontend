@@ -1,0 +1,19 @@
+<h2>Dashboard</h2>
+
+<form [formGroup]="editForm" (ngSubmit)="save()">
+    <label>Cidade</label>
+    <input type="text" formControlName="cidade">
+
+    <label>Estado</label>
+    <input type="text" formControlName="estado">
+
+    <button type="submit" [disabled]="editForm.invalid">Salvar</button>
+</form>
+
+<h3>Itens</h3>
+<ul>
+    <li *ngFor="let item of items">
+        {{ item.nome }} - {{ item.cidade }}/{{ item.estado }}
+        <button (click)="edit(item)">Editar</button>
+    </li>
+</ul>
