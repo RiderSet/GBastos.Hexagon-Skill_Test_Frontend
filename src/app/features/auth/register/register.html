@@ -1,0 +1,101 @@
+<div class="register-container">
+    <div class="register-card">
+        <h1>Criar Conta</h1>
+
+        @if (errorMessage) {
+        <div class="error-alert" role="alert">
+            <span class="error-icon">⚠️</span>
+            <p>{{ errorMessage }}</p>
+        </div>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="register()" class="register-form">
+            <!-- Username -->
+            <div class="form-group">
+                <label for="username">Usuário</label>
+                <input id="username" type="text" formControlName="username" placeholder="Digite seu usuário" class="form-input" [class.is-invalid]="form.get('username')?.invalid && form.get('username')?.touched" [disabled]="isLoading" autocomplete="username" />                @if (form.get('username')?.invalid && form.get('username')?.touched) {
+                <span class="error-text">
+            @if (form.get('username')?.errors?.['required']) {
+              Usuário é obrigatório
+            } @else if (form.get('username')?.errors?.['minlength']) {
+              Mínimo 3 caracteres
+            } @else if (form.get('username')?.errors?.['maxlength']) {
+              Máximo 20 caracteres
+            }
+          </span> }
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" type="email" formControlName="email" placeholder="Digite seu email" class="form-input" [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched" [disabled]="isLoading" autocomplete="email" /> @if (form.get('email')?.invalid
+                && form.get('email')?.touched) {
+                <span class="error-text">
+            @if (form.get('email')?.errors?.['required']) {
+              Email é obrigatório
+            } @else if (form.get('email')?.errors?.['email']) {
+              Email inválido
+            }
+          </span> }
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <div class="password-input-wrapper">
+                    <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Digite sua senha" class="form-input" [class.is-invalid]="form.get('password')?.invalid && form.get('password')?.touched" [disabled]="isLoading" autocomplete="new-password"
+                    />
+                    <button type="button" class="toggle-password" (click)="togglePasswordVisibility('password')" [disabled]="isLoading">
+            {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+          </button>
+                </div>
+                @if (form.get('password')?.invalid && form.get('password')?.touched) {
+                <span class="error-text">
+            @if (form.get('password')?.errors?.['required']) {
+              Senha é obrigatória
+            } @else if (form.get('password')?.errors?.['minlength']) {
+              Mínimo 6 caracteres
+            }
+          </span> }
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+                <label for="confirmPassword">Confirmar Senha</label>
+                <div class="password-input-wrapper">
+                    <input id="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" placeholder="Confirme sua senha" class="form-input" [class.is-invalid]="form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched"
+                        [disabled]="isLoading" autocomplete="new-password" />
+                    <button type="button" class="toggle-password" (click)="togglePasswordVisibility('confirmPassword')" [disabled]="isLoading">
+            {{ showConfirmPassword ? '👁️' : '���️‍🗨️' }}
+          </button>
+                </div>
+                @if (form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched) {
+                <span class="error-text">
+            @if (form.get('confirmPassword')?.errors?.['required']) {
+              Confirmação de senha é obrigatória
+            } @else if (form.hasError('passwordMismatch')) {
+              As senhas não conferem
+            }
+          </span> }
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-register" [disabled]="form.invalid || isLoading">
+        @if (isLoading) {
+          <span class="spinner"></span>
+          Criando conta...
+        } @else {
+          Registrar
+        }
+      </button>
+        </form>
+
+        <!-- Link para login -->
+        <div class="register-links">
+            <span>Já tem conta?</span>
+            <button type="button" class="link-button" (click)="goToLogin()" [disabled]="isLoading">
+        Faça login aqui
+      </button>
+        </div>
+    </div>
+</div>

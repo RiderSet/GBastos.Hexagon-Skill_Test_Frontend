@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError, timeout } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { StorageService } from './storage.service';
+import { StorageService } from '@services/storage.service';
 
 export interface LoginRequest {
   username: string;
@@ -31,13 +31,13 @@ export interface AuthError {
 })
 export class AuthService {
   private readonly http = inject(HttpClient);
-  private readonly storage = inject(StorageService);
+  private readonly storage: StorageService = inject(StorageService);  // ✅ Type assertion
   private readonly router = inject(Router);
 
   private readonly API_URL = '/api/auth';
-  private readonly TOKEN_KEY = 'auth_token';
-  private readonly REFRESH_TOKEN_KEY = 'refresh_token';
-  private readonly USER_KEY = 'current_user';
+  private readonly TOKEN_KEY = 'auth_token' as const;
+  private readonly REFRESH_TOKEN_KEY = 'refresh_token' as const;
+  private readonly USER_KEY = 'current_user' as const;
   private readonly REQUEST_TIMEOUT = 10000;
 
   /**
@@ -159,24 +159,24 @@ export class AuthService {
   /**
    * Verifica se o token está expirado (decodifica JWT)
    */
-isTokenExpired(): boolean {
-  const token = this.getToken();
-  if (!token) return true;
+  isTokenExpired(): boolean {
+    const token = this.getToken();
+    if (!token) return true;
 
-  try {
-    const parts = token.split('.');
-    if (parts.length !== 3) return true;
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return true;
 
-    const payload = JSON.parse(atob(parts[1]));
-    const expirationTime = payload.exp * 1000;
-    
-    // Buffer de 60 segundos
-    return Date.now() >= (expirationTime - 60000);
-  } catch (error) {
-    console.error('Erro ao decodificar token:', error);
-    return true;
+      const payload = JSON.parse(atob(parts[1]));
+      const expirationTime = payload.exp * 1000;
+      
+      // Buffer de 60 segundos
+      return Date.now() >= (expirationTime - 60000);
+    } catch (error) {
+      console.error('Erro ao decodificar token:', error);
+      return true;
+    }
   }
-}
 
   /**
    * Obtém dados do usuário armazenado

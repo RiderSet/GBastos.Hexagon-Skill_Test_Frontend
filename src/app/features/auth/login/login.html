@@ -1,0 +1,68 @@
+<div class="login-container">
+    <div class="login-card">
+        <h1>Login</h1>
+
+        @if (errorMessage) {
+        <div class="error-alert" role="alert">
+            <span class="error-icon">⚠️</span>
+            <p>{{ errorMessage }}</p>
+        </div>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="login()" class="login-form">
+            <!-- Username -->
+            <div class="form-group">
+                <label for="username">Usuário</label>
+                <input id="username" type="text" formControlName="username" placeholder="Digite seu usuário" class="form-input" [class.is-invalid]="form.get('username')?.invalid && form.get('username')?.touched" [disabled]="isLoading" autocomplete="username" />                @if (form.get('username')?.invalid && form.get('username')?.touched) {
+                <span class="error-text">
+            @if (form.get('username')?.errors?.['required']) {
+              Usuário é obrigatório
+            } @else if (form.get('username')?.errors?.['minlength']) {
+              Mínimo 3 caracteres
+            }
+          </span> }
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <div class="password-input-wrapper">
+                    <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Digite sua senha" class="form-input" [class.is-invalid]="form.get('password')?.invalid && form.get('password')?.touched" [disabled]="isLoading" autocomplete="current-password"
+                    />
+                    <button type="button" class="toggle-password" (click)="togglePasswordVisibility()" [disabled]="isLoading" aria-label="Mostrar/Ocultar senha">
+            {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+          </button>
+                </div>
+                @if (form.get('password')?.invalid && form.get('password')?.touched) {
+                <span class="error-text">
+            @if (form.get('password')?.errors?.['required']) {
+              Senha é obrigatória
+            } @else if (form.get('password')?.errors?.['minlength']) {
+              Mínimo 6 caracteres
+            }
+          </span> }
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-login" [disabled]="form.invalid || isLoading">
+        @if (isLoading) {
+          <span class="spinner"></span>
+          Entrando...
+        } @else {
+          Entrar
+        }
+      </button>
+        </form>
+
+        <!-- Links adicionais -->
+        <div class="login-links">
+            <button type="button" class="link-button" (click)="goToForgotPassword()" [disabled]="isLoading">
+        Esqueceu a senha?
+      </button>
+            <span class="separator">•</span>
+            <button type="button" class="link-button" (click)="goToRegister()" [disabled]="isLoading">
+        Criar conta
+      </button>
+        </div>
+    </div>
+</div>
