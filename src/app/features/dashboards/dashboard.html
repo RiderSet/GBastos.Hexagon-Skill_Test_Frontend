@@ -1,19 +1,22 @@
 <h2>Dashboard</h2>
 
-<form [formGroup]="editForm" (ngSubmit)="save()">
-    <label>Cidade</label>
-    <input type="text" formControlName="cidade">
+<form [formGroup]="editForm" (ngSubmit)="save()" class="edit-form">
+    <div>
+        <label for="cidade">Cidade</label>
+        <input id="cidade" type="text" formControlName="cidade" placeholder="Cidade" />
+    </div>
 
-    <label>Estado</label>
-    <input type="text" formControlName="estado">
+    <div>
+        <label for="estado">Estado</label>
+        <input id="estado" type="text" formControlName="estado" placeholder="Estado" />
+    </div>
 
-    <button type="submit" [disabled]="editForm.invalid">Salvar</button>
+    <button type="submit" [disabled]="editForm.invalid">
+    Salvar
+  </button>
 </form>
 
-<h3>Itens</h3>
-<ul>
-    <li *ngFor="let item of items">
-        {{ item.nome }} - {{ item.cidade }}/{{ item.estado }}
-        <button (click)="edit(item)">Editar</button>
-    </li>
-</ul>
+<h3>Usuários</h3>
+
+<app-table-grid [data]="items" [columns]="columns" (edit)="edit($event)" (remove)="remove($event)" (selectionChange)="onSelectionChange($event)" (filterChange)="onFilterChange($event)">
+</app-table-grid>

@@ -2,8 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { StorageService } from '@services/storage.service'; 
-import { AuthService } from '@services/auth.service';  
+import { StorageService } from '@services/storage.service';
+import { AuthService } from '@services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -50,40 +50,37 @@ login(): void {
     return;
   }
 
-  this.isLoading = true;
-  const { username, password } = this.form.value;
+  const { username, password } = this.form.getRawValue();
 
   if (!username || !password) {
     this.errorMessage = 'Usuário e senha são obrigatórios';
-    this.isLoading = false;
     return;
   }
 
-  console.log('🔐 Enviando login...', { username }); // ✅ Log
+  this.isLoading = true;
+
+  console.log('🔐 Enviando login...', { username, password });
 
   this.authService.login(username, password).subscribe({
     next: (response) => {
-      console.log('✅ Login sucesso:', response); // ✅ Log
-      
+      console.log('✅ Login sucesso:', response);
+
       if (response.token) {
         this.storage.setItem('auth_token', response.token);
-        
+
         if (response.refreshToken) {
           this.storage.setItem('refresh_token', response.refreshToken);
         }
 
         this.form.reset();
-        console.log('🚀 Navegando para dashboard...'); // ✅ Log
         this.router.navigate(['/dashboard']);
       }
     },
     error: (error) => {
-      console.error('❌ Erro no login:', error); // ✅ Log
-      this.isLoading = false;
+      console.error('❌ Erro no login:', error);
       this.handleLoginError(error);
     },
     complete: () => {
-      console.log('✔️ Login concluído'); // ✅ Log
       this.isLoading = false;
     }
   });

@@ -27,8 +27,7 @@
             <div class="form-group">
                 <label for="password">Senha</label>
                 <div class="password-input-wrapper">
-                    <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Digite sua senha" class="form-input" [class.is-invalid]="form.get('password')?.invalid && form.get('password')?.touched" [disabled]="isLoading" autocomplete="current-password"
-                    />
+                    <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Digite sua senha" class="form-input" autocomplete="current-password" />
                     <button type="button" class="toggle-password" (click)="togglePasswordVisibility()" [disabled]="isLoading" aria-label="Mostrar/Ocultar senha">
             {{ showPassword ? '👁️' : '👁️‍🗨️' }}
           </button>

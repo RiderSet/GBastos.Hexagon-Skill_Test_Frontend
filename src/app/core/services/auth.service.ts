@@ -34,7 +34,7 @@ export class AuthService {
   private readonly storage = inject(StorageService);
   private readonly router = inject(Router);
 
-  private readonly API_URL = '/api/auth';
+  private readonly API_URL = 'https://localhost:7248/api/auth';
   private readonly TOKEN_KEY = 'auth_token';
   private readonly REFRESH_TOKEN_KEY = 'refresh_token';
   private readonly USER_KEY = 'current_user';
