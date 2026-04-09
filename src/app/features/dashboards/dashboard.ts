@@ -19,6 +19,7 @@ import { TableGridComponent } from './components/tables/table-grid';
 export class DashboardComponent implements OnInit {
   createForm!: FormGroup;
   items: any[] = [];
+  dados: any; // ✅ declarada
   columns = [
     { field: 'nome', header: 'Nome' },
     { field: 'idade', header: 'Idade' },
@@ -32,28 +33,38 @@ export class DashboardComponent implements OnInit {
   fileName: string | null = null;
 
   constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
+    private readonly fb: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
+    // ✅ inicializa o formulário corretamente
     this.createForm = this.fb.group({
       nome: ['', Validators.required],
       idade: ['', Validators.required],
       cpf: ['', Validators.required],
       cidade: ['', Validators.required],
       estado: ['', Validators.required],
-      username: ['', Validators.required]
+      username: ['', Validators.required],
+    });
+    
+    this.authService.getDados().subscribe({
+      next: (res) => {
+        this.dados = res;
+        console.log('Dados carregados:', res);
+      },
+      error: (err) => {
+        console.error('Erro ao carregar dados', err);
+      }
     });
 
-    this.loadUsuarios(); // ✅ carrega registros ao abrir
+    this.loadUsuarios(); // carrega lista de usuários
   }
 
   loadUsuarios(): void {
     this.authService.getAllUsuarios().subscribe({
       next: (res) => {
-        // adapta ao formato real do backend
         this.items = res.data ?? res;
       },
       error: (err) => {
@@ -62,24 +73,35 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  addUser(): void {
-    if (this.createForm.invalid) return;
+addUser(): void {
+  if (this.createForm.invalid) return;
 
-    const novoUsuario = this.createForm.value;
-    // Aqui você pode chamar um endpoint de criação, ex: this.authService.register()
-    console.log('Novo usuário:', novoUsuario);
+  const novoUsuario = this.createForm.value;
 
-    this.resetForm();
-    this.loadUsuarios(); // recarrega lista
+  // adiciona o novo registro
+  this.items = [...this.items, novoUsuario];
+
+  // reordena conforme critério (exemplo: nome)
+  this.items.sort((a, b) => a.nome.localeCompare(b.nome));
+
+  this.resetForm();
+}
+
+update(usuario: any): void {
+  // encontra o índice do usuário no array
+  const index = this.items.findIndex(u => u.username === usuario.username);
+  if (index !== -1) {
+    this.items[index] = { ...usuario }; 
+    console.log('Usuário alterado:', usuario);
   }
+}
 
   edit(usuario: any): void {
-    this.createForm.patchValue(usuario); // coloca em evidência no formulário
+    this.createForm.patchValue(usuario);
   }
 
   remove(usuario: any): void {
     console.log('Remover usuário:', usuario);
-    // aqui você pode chamar um endpoint de exclusão
   }
 
   resetForm(): void {
@@ -107,8 +129,13 @@ export class DashboardComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  onRowSelected(usuario: any): void {
-    console.log('Selecionado:', usuario);
-    this.createForm.patchValue(usuario); // destaca registro no formulário
-  }
+onRowSelected(usuario: any): void {
+  this.createForm.patchValue({
+    nome: usuario.nome,
+    idade: usuario.idade,
+    email: usuario.email,
+    username: usuario.username,
+    password: usuario.password
+  });
+}
 }

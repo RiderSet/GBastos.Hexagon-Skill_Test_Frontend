@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError, timeout } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 export interface LoginRequest {
   username: string;
@@ -128,6 +129,10 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
+  }
+
+  getDados() {
+  return this.http.get(`${environment.apiUrl}/dados`);
   }
 
   private handleError(err: any): Observable<never> {

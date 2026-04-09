@@ -29,7 +29,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
   </thead>
 
   <tbody>
-    <tr *ngFor="let row of data"
+    <tr *ngFor="let row of items"
         [class.selected]="isSelected(row)"
         (click)="selectRow(row)">
 
@@ -46,40 +46,44 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
       <!-- Ações -->
       <td class="actions">
         <button type="button" (click)="edit.emit(row); $event.stopPropagation()">Editar</button>
+        <button type="button" (click)="update.emit(row); $event.stopPropagation()">Alterar</button>
         <button type="button" (click)="remove.emit(row); $event.stopPropagation()">Excluir</button>
       </td>
     </tr>
   </tbody>
 
 </table>
-`
+`,
+  styleUrls: ['./table-grid.scss']
 })
 export class TableGridComponent {
-  @Input() data: any[] = [];
+  @Input() items: any[] = [];
   @Input() columns: any[] = [];
 
   @Output() edit = new EventEmitter<any>();
+  @Output() update = new EventEmitter<any>();
   @Output() remove = new EventEmitter<any>();
-  @Output() selected = new EventEmitter<any>();   // novo output
+  @Output() rowSelected = new EventEmitter<any>();
 
-  drop(event: CdkDragDrop<any[]>) {
-    moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
+  selectRow(row: any): void {
+    this.rowSelected.emit(row);
   }
-
-  filter(field: string, event: any) { /* ... */ }
 
   isSelected(row: any): boolean {
-    return this._selectedRow === row;
-  }
-
-  private _selectedRow: any;
-
-  selectRow(row: any) {
-    this._selectedRow = row;
-    this.selected.emit(row);
+    return false; // ajuste conforme sua lógica de seleção
   }
 
   getValue(row: any, field: string): any {
     return row[field];
+  }
+
+  filter(field: string, event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    console.log(`Filtrar ${field} por ${value}`);
+    // implementar lógica de filtro se necessário
+  }
+
+  drop(event: CdkDragDrop<string[]>): void {
+    moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
   }
 }

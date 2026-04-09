@@ -12,27 +12,16 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "preserve",
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
-      "@core/*": ["src/app/core/*"],
-      "@services/*": ["src/app/core/services/*"],
-      "@guards/*": ["src/app/core/guards/*"],
-      "@features/*": ["src/app/features/*"]
+      "@core/*": ["app/core/*"],
+      "@services/*": ["app/core/services/*"],
+      "@guards/*": ["app/core/guards/*"],
+      "@components/*": ["app/components/*"],
+      "@models/*": ["app/models/*"],
+      "@shared/*": ["app/shared/*"]
     }
   },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": false
-  },
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    }
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.spec.ts"]
 }

@@ -1,0 +1,36 @@
+.actions {
+    display: flex; // coloca os botões em linha
+    gap: 0.5rem; // espaço entre eles
+    justify-content: center; // centraliza dentro da célula
+    align-items: center; // alinha verticalmente
+    min-width: 240px; // garante espaço suficiente
+}
+
+.actions button {
+    padding: 0.4rem 0.8rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 0.85rem;
+    white-space: nowrap; // evita quebra de linha
+}
+
+.actions button:nth-child(1) {
+    background-color: #2196f3;
+} // Editar
+.actions button:nth-child(2) {
+    background-color: #ff9800;
+} // Alterar
+.actions button:nth-child(3) {
+    background-color: #f44336;
+} // Excl
+.actions button:nth-child(2) {
+    background-color: #ff9800;
+} // Alterar
+.actions button:nth-child(3) {
+    background-color: #f44336;
+} // Excl
+.actions button:hover {
+    opacity: 0.85;
+}
