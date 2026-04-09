@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { StorageService } from '../../core/services/storage.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -62,7 +63,8 @@ export class Toolbar {
 
   constructor(
     private readonly auth: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly storage: StorageService
   ) {
     this.username = this.getUserNameFromToken();
   }
@@ -72,8 +74,8 @@ export class Toolbar {
     this.router.navigate(['/login']);
   }
 
-  private getUserNameFromToken(): string {
-    const token = this.auth.getToken();
+private getUserNameFromToken(): string {
+  const token = this.storage.getToken();
 
     if (!token) return '';
 

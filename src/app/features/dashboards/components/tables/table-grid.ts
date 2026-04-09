@@ -11,103 +11,75 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 <table class="material-table">
 
   <thead>
-
     <tr cdkDropList (cdkDropListDropped)="drop($event)">
-      <th class="checkbox">
-        <input type="checkbox" (change)="toggleAll($event)">
-      </th>
-
+      <th>Imagem</th>
       <th *ngFor="let col of columns" cdkDrag>
         {{ col.header }}
       </th>
-
       <th>Ações</th>
     </tr>
 
     <tr class="filters">
       <th></th>
-
       <th *ngFor="let col of columns">
-        <input
-          (input)="filter(col.field,$event)"
-          placeholder="Filtrar..."
-        />
+        <input (input)="filter(col.field,$event)" placeholder="Filtrar..." />
       </th>
-
       <th></th>
     </tr>
-
   </thead>
 
   <tbody>
-
     <tr *ngFor="let row of data"
         [class.selected]="isSelected(row)"
-        (click)="toggleRow(row)">
+        (click)="selectRow(row)">
 
-      <td class="checkbox">
-        <input
-          type="checkbox"
-          [checked]="isSelected(row)"
-          (click)="$event.stopPropagation()"
-          (change)="toggleRow(row)">
+      <!-- Primeira célula: imagem -->
+      <td class="image-cell">
+        <img [src]="row.image" class="avatar" *ngIf="row.image">
       </td>
 
+      <!-- Demais células: colunas -->
       <td *ngFor="let col of columns">
-        {{ row[col.field] }}
+        {{ getValue(row, col.field) }}
       </td>
 
+      <!-- Ações -->
       <td class="actions">
-        <button (click)="edit.emit(row); $event.stopPropagation()">Editar</button>
-        <button (click)="delete.emit(row); $event.stopPropagation()">Excluir</button>
+        <button type="button" (click)="edit.emit(row); $event.stopPropagation()">Editar</button>
+        <button type="button" (click)="remove.emit(row); $event.stopPropagation()">Excluir</button>
       </td>
-
     </tr>
-
   </tbody>
 
 </table>
 `
 })
-export class TableGrid {
-
+export class TableGridComponent {
   @Input() data: any[] = [];
   @Input() columns: any[] = [];
 
   @Output() edit = new EventEmitter<any>();
-  @Output() delete = new EventEmitter<any>();
-  @Output() selectionChange = new EventEmitter<any[]>();
-  @Output() filterChange = new EventEmitter<any>();
+  @Output() remove = new EventEmitter<any>();
+  @Output() selected = new EventEmitter<any>();   // novo output
 
-  selected: any[] = [];
-  filters: any = {};
-
-  toggleRow(row: any) {
-    const index = this.selected.indexOf(row);
-
-    if (index >= 0)
-      this.selected.splice(index, 1);
-    else
-      this.selected.push(row);
-
-    this.selectionChange.emit(this.selected);
-  }
-
-  toggleAll(event: any) {
-    this.selected = event.target.checked ? [...this.data] : [];
-    this.selectionChange.emit(this.selected);
-  }
-
-  isSelected(row: any) {
-    return this.selected.includes(row);
-  }
-
-  filter(field: string, event: any) {
-    this.filters[field] = event.target.value;
-    this.filterChange.emit(this.filters);
-  }
-
-  drop(event: CdkDragDrop<string[]>) {
+  drop(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
+  }
+
+  filter(field: string, event: any) { /* ... */ }
+
+  isSelected(row: any): boolean {
+    return this._selectedRow === row;
+  }
+
+  private _selectedRow: any;
+
+  selectRow(row: any) {
+    this._selectedRow = row;
+    this.selected.emit(row);
+  }
+
+  getValue(row: any, field: string): any {
+    return row[field];
   }
 }

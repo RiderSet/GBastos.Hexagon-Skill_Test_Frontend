@@ -1,76 +1,66 @@
-/* src/app/features/dashboard/dashboard.scss */
-
-
-/* Container geral */
-
-:host {
-    display: block;
-    padding: 2rem;
-    font-family: Arial, sans-serif;
-    color: #333;
+.dashboard-container {
+    padding: 24px;
+    background: #f5f6fa;
+    min-height: 100vh;
 }
 
-
-/* Título */
-
-h1 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    color: #2c3e50;
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-
-/* Mensagens de status */
-
-div {
-    &.loading {
-        color: #2980b9;
-        font-weight: bold;
-        margin-bottom: 1rem;
-    }
-    &.error {
-        color: #e74c3c;
-        font-weight: bold;
-        margin-bottom: 1rem;
-    }
+.header-actions {
+    display: flex;
+    gap: 10px;
 }
 
-
-/* Tabela de usuários */
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 2rem;
-    background-color: #fff;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    thead {
-        background-color: #34495e;
-        color: #fff;
-        th {
-            padding: 0.75rem 1rem;
-            text-align: left;
-            font-weight: bold;
-            border-bottom: 2px solid #2c3e50;
-        }
-    }
-    tbody {
-        tr {
-            border-bottom: 1px solid #ddd;
-            &:hover {
-                background-color: #f1f1f1;
-            }
-            td {
-                padding: 0.75rem 1rem;
-            }
-        }
-    }
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+.top-form {
+    display: grid;
+    grid-template-columns: 80px repeat(6, 1fr) 120px;
+    gap: 10px;
+    margin-bottom: 20px;
+}
 
-/* Mensagem quando não há dados */
+.top-form input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
 
-p {
-    font-style: italic;
-    color: #7f8c8d;
+.add-btn {
+    background: #3f51b5;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+}
+
+.logout-btn {
+    background: #e53935;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+}
+
+.save-btn {
+    background: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+}
+
+.preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }

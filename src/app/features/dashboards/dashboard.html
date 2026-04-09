@@ -1,22 +1,34 @@
-<h2>Dashboard</h2>
+<div class="dashboard-container">
 
-<form [formGroup]="editForm" (ngSubmit)="save()" class="edit-form">
-    <div>
-        <label for="cidade">Cidade</label>
-        <input id="cidade" type="text" formControlName="cidade" placeholder="Cidade" />
+    <!-- Cabeçalho -->
+    <div class="page-header">
+        <h2>Lista de Usuários</h2>
+
+        <button class="add-btn" type="button" (click)="resetForm()">Novo Usuário +</button>
+        <button class="logout-btn" type="button" (click)="logout()">Sair</button>
     </div>
 
-    <div>
-        <label for="estado">Estado</label>
-        <input id="estado" type="text" formControlName="estado" placeholder="Estado" />
-    </div>
+    <!-- Formulário de criação -->
+    <form class="top-form" [formGroup]="createForm" (ngSubmit)="addUser()" type="form">
 
-    <button type="submit" [disabled]="editForm.invalid">
-    Salvar
-  </button>
-</form>
+        <div class="image-upload">
+            <label for="fileInput">Imagem</label>
+            <input id="fileInput" type="file" (change)="onFileSelected($event)"> @if (preview) {
+            <img [src]="preview" [alt]="fileName || 'Pré-visualização da imagem'" class="preview" type="image"> }
+        </div>
 
-<h3>Usuários</h3>
+        <input placeholder="Nome" type="text" formControlName="nome">
+        <input placeholder="Idade" type="number" formControlName="idade">
+        <input placeholder="CPF" type="text" formControlName="cpf">
+        <input placeholder="Cidade" type="text" formControlName="cidade">
+        <input placeholder="Estado" type="text" formControlName="estado">
+        <input placeholder="Username" type="text" formControlName="username">
 
-<app-table-grid [data]="items" [columns]="columns" (edit)="edit($event)" (remove)="remove($event)" (selectionChange)="onSelectionChange($event)" (filterChange)="onFilterChange($event)">
-</app-table-grid>
+        <button type="submit" [disabled]="createForm.invalid">Salvar</button>
+    </form>
+
+    <!-- Grid de usuários -->
+    <app-table-grid type="component" [data]="items" [columns]="columns" (edit)="edit($event)" (remove)="remove($event)">
+    </app-table-grid>
+
+</div>

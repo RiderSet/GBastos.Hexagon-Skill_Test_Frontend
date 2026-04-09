@@ -1,133 +1,96 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, NonNullableFormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, RouterLink } from '@angular/router';
-import { AuthService } from '@services/auth.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService, AuthError } from '@services/auth.service';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './reset-password.html',
-  styleUrls: ['./reset-password.scss']
+  styleUrls: ['./reset-password.scss'],
+  host: {
+    'class': 'reset-password-wrapper'
+  }
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly authService = inject(AuthService);
 
-  form = this.fb.group(
-    {
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
-    },
-    { validators: this.passwordMatchValidator }
-  );
+  form = this.fb.group({
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    confirmPassword: ['', [Validators.required]]
+  });
 
   errorMessage = '';
   successMessage = '';
   isLoading = false;
-  showPassword = false;
-  showConfirmPassword = false;
-  token: string | null = null;
+  token = '';
+
   isInvalidToken = false;
 
-  ngOnInit(): void {
-    // Obter token da URL
-    const tokenParam = this.route.snapshot.paramMap.get('token');
-    
-    if (!tokenParam) {
-      this.isInvalidToken = true;
-      this.errorMessage = 'Token inválido ou expirado. Solicite um novo reset de senha.';
-      return;
-    }
-
-    this.token = tokenParam;
-    this.setupErrorClearing();
-  }
-
-  private setupErrorClearing(): void {
-    this.form.statusChanges.subscribe(() => {
-      if (this.form.valid) {
-        this.errorMessage = '';
-      }
+  constructor() {
+    // Captura o token da URL (ex: /reset-password?token=XYZ)
+    this.route.queryParams.subscribe(params => {
+      this.token = params['token'] || '';
     });
-  }
-
-  private passwordMatchValidator(form: any): { [key: string]: boolean } | null {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-
-    return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
   resetPassword(): void {
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (!this.token) {
-      this.errorMessage = 'Token inválido. Tente novamente.';
-      return;
-    }
-
     if (this.form.invalid) {
       this.errorMessage = 'Por favor, preencha todos os campos corretamente';
       return;
     }
 
-    if (this.form.hasError('passwordMismatch')) {
-      this.errorMessage = 'As senhas não conferem';
+    const { password, confirmPassword } = this.form.getRawValue();
+
+    if (!password || !confirmPassword) {
+      this.errorMessage = 'Senha e confirmação são obrigatórias';
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      this.errorMessage = 'As senhas não coincidem';
       return;
     }
 
     this.isLoading = true;
-    const { password } = this.form.value;
 
-    // ✅ Type guard: password é garantido ser string aqui
-    if (!password) {
-      this.errorMessage = 'Senha inválida';
-      this.isLoading = false;
-      return;
-    }
+    console.log('🔐 Enviando reset de senha...', { token: this.token, password });
 
     this.authService.resetPassword(this.token, password).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        this.successMessage = response.message || 'Senha redefinida com sucesso! Redirecionando para login...';
+      next: (response: any) => {
+        console.log('✅ Senha resetada com sucesso:', response);
+        this.successMessage = 'Senha redefinida com sucesso! Faça login novamente.';
         this.form.reset();
-
-        // Redirecionar para login após 3 segundos
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 3000);
+        this.router.navigate(['/login']);
       },
-      error: (error) => {
+      error: (error: AuthError) => {
+        console.error('❌ Erro ao resetar senha:', error);
+        this.handleResetError(error);
+      },
+      complete: () => {
         this.isLoading = false;
-        
-        if (error.status === 400 || error.status === 404) {
-          this.errorMessage = 'Token expirado ou inválido. Solicite um novo reset de senha.';
-          this.isInvalidToken = true;
-        } else {
-          this.errorMessage = error.message || 'Erro ao redefinir senha. Tente novamente.';
-        }
       }
     });
   }
 
-  togglePasswordVisibility(field: 'password' | 'confirmPassword'): void {
-    if (field === 'password') {
-      this.showPassword = !this.showPassword;
+  private handleResetError(error: any): void {
+    if (error.status === 400) {
+      this.errorMessage = 'Token inválido ou expirado';
+      this.isInvalidToken = true;
+    } else if (error.status === 0) {
+      this.errorMessage = 'Erro de conexão. Verifique sua internet';
+    } else if (error.error?.message) {
+      this.errorMessage = error.error.message;
     } else {
-      this.showConfirmPassword = !this.showConfirmPassword;
+      this.errorMessage = 'Erro ao redefinir senha. Tente novamente';
     }
-  }
-
-  goToLogin(): void {
-    this.router.navigate(['/login']);
-  }
-
-  goToForgotPassword(): void {
-    this.router.navigate(['/forgot-password']);
   }
 }

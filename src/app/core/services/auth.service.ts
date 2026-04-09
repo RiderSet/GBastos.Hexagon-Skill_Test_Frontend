@@ -1,9 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError, timeout } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { StorageService } from './storage.service';
 
 export interface LoginRequest {
   username: string;
@@ -13,11 +11,6 @@ export interface LoginRequest {
 export interface LoginResponse {
   token: string;
   refreshToken?: string;
-  user?: {
-    id: string;
-    username: string;
-    email: string;
-  };
 }
 
 export interface AuthError {
@@ -30,226 +23,119 @@ export interface AuthError {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly http = inject(HttpClient);
-  private readonly storage = inject(StorageService);
-  private readonly router = inject(Router);
-
-  private readonly API_URL = 'https://localhost:7248/api/auth';
+  private readonly API_URL = 'https://localhost:7248/api/auth'; // ajuste conforme seu backend
   private readonly TOKEN_KEY = 'auth_token';
-  private readonly REFRESH_TOKEN_KEY = 'refresh_token';
-  private readonly USER_KEY = 'current_user';
-  private readonly REQUEST_TIMEOUT = 10000;
+  private readonly REFRESH_KEY = 'refresh_token';
 
-  /**
-   * Realiza login com username e password
-   */
-  login(username: string, password: string): Observable<LoginResponse> {
-    const request: LoginRequest = { username, password };
+  constructor(private http: HttpClient) {}
 
+  // LOGIN
+  login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.API_URL}/login`, request).pipe(
-      timeout(this.REQUEST_TIMEOUT),
-      tap((response) => {
-        this.storeTokens(response);
-        this.storeUser(response.user);
+      tap(res => {
+        this.setToken(res.token);
+        if (res.refreshToken) {
+          localStorage.setItem(this.REFRESH_KEY, res.refreshToken);
+        }
       }),
-      catchError((error) => {
-        return throwError(() => this.formatError(error));
-      })
+      catchError(err => this.handleError(err)),
+      timeout(5000)
     );
   }
 
-  /**
-   * Realiza logout
-   */
-  logout(): void {
-    this.http.post(`${this.API_URL}/logout`, {}).subscribe({
-      error: (err) => console.error('Erro ao fazer logout no servidor:', err)
-    });
-
-    this.clearTokens();
-    this.clearUser();
-    this.router.navigate(['/login']);
+  // REGISTRO
+  register(request: { username: string; password: string; email?: string; cpf?: string }): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/register`, request).pipe(
+      tap(res => console.log('✅ Registro sucesso:', res)),
+      catchError(err => this.handleError(err)),
+      timeout(5000)
+    );
   }
 
-  /**
-   * Realiza refresh do token
-   */
+  // ESQUECI SENHA
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/forgot-password`, { email }).pipe(
+      tap(res => console.log('✅ Solicitação de recuperação enviada:', res)),
+      catchError(err => this.handleError(err)),
+      timeout(5000)
+    );
+  }
+
+  // RESETAR SENHA
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/reset-password`, { token, newPassword }).pipe(
+      tap(res => console.log('✅ Senha redefinida com sucesso:', res)),
+      catchError(err => this.handleError(err)),
+      timeout(5000)
+    );
+  }
+
+  // REFRESH TOKEN
   refreshToken(): Observable<LoginResponse> {
-    const refreshToken = this.getRefreshToken();
-
-    if (!refreshToken) {
-      return throwError(() => new Error('Refresh token não disponível'));
-    }
-
-    return this.http.post<LoginResponse>(`${this.API_URL}/refresh`, { refreshToken }).pipe(
-      timeout(this.REQUEST_TIMEOUT),
-      tap((response) => {
-        this.storeTokens(response);
+    const refreshToken = localStorage.getItem(this.REFRESH_KEY);
+    return this.http.post<LoginResponse>(`${this.API_URL}/refresh-token`, { refreshToken }).pipe(
+      tap(res => {
+        if (res.token) {
+          this.setToken(res.token);
+        }
+        if (res.refreshToken) {
+          localStorage.setItem(this.REFRESH_KEY, res.refreshToken);
+        }
       }),
-      catchError((error) => {
-        this.logout();
-        return throwError(() => this.formatError(error));
-      })
+      catchError(err => this.handleError(err))
     );
   }
 
-  /**
-   * Registra novo usuário
-   */
-  register(username: string, email: string, password: string): Observable<LoginResponse> {
-    const request = { username, email, password };
-
-    return this.http.post<LoginResponse>(`${this.API_URL}/register`, request).pipe(
-      timeout(this.REQUEST_TIMEOUT),
-      tap((response) => {
-        this.storeTokens(response);
-        this.storeUser(response.user);
-      }),
-      catchError((error) => {
-        return throwError(() => this.formatError(error));
-      })
-    );
+  // LOGOUT
+  logout(): void {
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.REFRESH_KEY);
   }
 
-  /**
-   * Solicita reset de senha
-   */
-  forgotPassword(email: string): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.API_URL}/forgot-password`, { email }).pipe(
-      timeout(this.REQUEST_TIMEOUT),
-      catchError((error) => {
-        return throwError(() => this.formatError(error));
-      })
-    );
-  }
-
-  /**
-   * Reset de senha com token
-   */
-  resetPassword(token: string, newPassword: string): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.API_URL}/reset-password`, { token, newPassword }).pipe(
-      timeout(this.REQUEST_TIMEOUT),
-      catchError((error) => {
-        return throwError(() => this.formatError(error));
-      })
-    );
-  }
-
-  /**
-   * Obtém o token de autenticação
-   */
-  getToken(): string | null {
-    return this.storage.getItem(this.TOKEN_KEY);
-  }
-
-  /**
-   * Obtém o refresh token (público para uso no interceptador)
-   */
-  getRefreshToken(): string | null {
-    return this.storage.getItem(this.REFRESH_TOKEN_KEY);
-  }
-
-  /**
-   * Verifica se o usuário está autenticado
-   */
+  // VERIFICA SE ESTÁ LOGADO
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    return !!token && !this.isTokenExpired();
   }
 
-  /**
-   * Verifica se o token está expirado (decodifica JWT)
-   */
-isTokenExpired(): boolean {
-  const token = this.getToken();
-  if (!token) return true;
+  // VERIFICA SE TOKEN EXPIROU
+  isTokenExpired(): boolean {
+    const token = this.getToken();
+    if (!token) return true;
 
-  try {
-    const parts = token.split('.');
-    if (parts.length !== 3) return true;
-
-    const payload = JSON.parse(atob(parts[1]));
-    const expirationTime = payload.exp * 1000;
-    
-    // Buffer de 60 segundos
-    return Date.now() >= (expirationTime - 60000);
-  } catch (error) {
-    console.error('Erro ao decodificar token:', error);
-    return true;
-  }
-}
-
-  /**
-   * Obtém dados do usuário armazenado
-   */
-  getCurrentUser(): any {
-    const userJson = this.storage.getItem(this.USER_KEY);
-    return userJson ? JSON.parse(userJson) : null;
-  }
-
-  /**
-   * Armazena tokens
-   */
-  private storeTokens(response: LoginResponse): void {
-    if (response.token) {
-      this.storage.setItem(this.TOKEN_KEY, response.token);
-    }
-    if (response.refreshToken) {
-      this.storage.setItem(this.REFRESH_TOKEN_KEY, response.refreshToken);
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp;
+      const now = Math.floor(Date.now() / 1000);
+      return exp < now;
+    } catch (e) {
+      console.error('Erro ao verificar expiração do token:', e);
+      return true;
     }
   }
 
-  /**
-   * Armazena dados do usuário
-   */
-  private storeUser(user: any): void {
-    if (user) {
-      this.storage.setItem(this.USER_KEY, JSON.stringify(user));
-    }
+  // LISTAR USUÁRIOS (para dashboard)
+  getAllUsuarios(page: number = 1, pageSize: number = 10): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}/getAll?page=${page}&pageSize=${pageSize}`).pipe(
+      catchError(err => this.handleError(err))
+    );
   }
 
-  /**
-   * Limpa tokens
-   */
-  private clearTokens(): void {
-    this.storage.removeItem(this.TOKEN_KEY);
-    this.storage.removeItem(this.REFRESH_TOKEN_KEY);
+  // UTILITÁRIOS
+  private setToken(token: string): void {
+    localStorage.setItem(this.TOKEN_KEY, token);
   }
 
-  /**
-   * Limpa dados do usuário
-   */
-  private clearUser(): void {
-    this.storage.removeItem(this.USER_KEY);
+  getToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 
-  /**
-   * Formata erros padronizados
-   */
-  private formatError(error: any): AuthError {
-    const authError: AuthError = {
-      status: error.status || 0,
-      message: 'Erro desconhecido'
+  private handleError(err: any): Observable<never> {
+    const error: AuthError = {
+      status: err.status,
+      message: err.error?.message || 'Erro de autenticação',
+      error: err.error
     };
-
-    if (error.status === 0) {
-      authError.message = 'Erro de conexão. Verifique sua internet';
-    } else if (error.status === 401) {
-      authError.message = 'Usuário ou senha inválidos';
-    } else if (error.status === 403) {
-      authError.message = 'Acesso negado';
-    } else if (error.status === 404) {
-      authError.message = 'Usuário não encontrado';
-    } else if (error.status === 409) {
-      authError.message = 'Usuário ou email já existe';
-    } else if (error.status === 422) {
-      authError.message = error.error?.message || 'Dados inválidos';
-    } else if (error.status >= 500) {
-      authError.message = 'Erro no servidor. Tente novamente mais tarde';
-    } else if (error.error?.message) {
-      authError.message = error.error.message;
-    }
-
-    authError.error = error.error;
-    return authError;
+    return throwError(() => error);
   }
 }
